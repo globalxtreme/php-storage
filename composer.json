@@ -1,0 +1,19 @@
+{
+  "name": "globalxtreme/php-storage",
+  "description": "GlobalXtreme Storage Package for PHP Language",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Yuswa",
+      "email": "yuswa98@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "GlobalXtreme\\PHPStorage\\": "src/"
+    }
+  },
+  "require": {
+    "php": "7.*|8.*"
+  }
+}
