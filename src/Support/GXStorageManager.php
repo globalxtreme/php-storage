@@ -20,7 +20,7 @@ trait GXStorageManager
         }
 
         $response = new GXStorageResponse();
-        $response->setResponse($store->result);
+        $response->setResponse($store);
 
         return $response;
     }
@@ -28,13 +28,16 @@ trait GXStorageManager
     /**
      * @param $path
      *
-     * @return boolean
+     * @return GXStorageResponse|null
      */
     public static function delete($path)
     {
         $client = new GXStorageClient();
         $store = $client->delete($path);
 
-        return $store ? true : false;
+        $response = new GXStorageResponse();
+        $response->setResponse($store);
+
+        return $response;
     }
 }

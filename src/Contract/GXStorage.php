@@ -19,7 +19,7 @@ interface GXStorage
     /**
      * @param $path
      *
-     * @return boolean
+     * @return GXStorageResponse|null
      */
     public static function delete($path);
 }

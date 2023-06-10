@@ -4,6 +4,7 @@ namespace GlobalXtreme\PHPStorage\Support;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
+use Illuminate\Support\Facades\Log;
 
 class GXStorageClient
 {
@@ -54,20 +55,16 @@ class GXStorageClient
 
             $response = $this->client->post("$this->baseURL/galleries", $options);
 
-            // Check http status code
-            if ($response->getStatusCode() != 200) {
-                return null;
-            }
-
             // Set response body
-            $body = json_decode($response->getBody());
+            $body = json_decode($response->getBody(), true);
             if (!$body) {
                 return null;
             }
 
-            return optional($body)->result ?: null;
+            return $body;
 
         } catch (\Exception $exception) {
+            Log::error($exception);
             return null;
         }
     }
@@ -83,18 +80,13 @@ class GXStorageClient
 
             $response = $this->client->delete("$this->baseURL/galleries", $options);
 
-            // Check http status code
-            if ($response->getStatusCode() != 200) {
-                return null;
-            }
-
             // Set response body
-            $body = json_decode($response->getBody());
+            $body = json_decode($response->getBody(), true);
             if (!$body) {
                 return null;
             }
 
-            return optional($body)->result ?: null;
+            return $body;
 
         } catch (\Exception $exception) {
             return null;
