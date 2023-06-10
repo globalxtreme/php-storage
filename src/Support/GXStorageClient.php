@@ -3,8 +3,10 @@
 namespace GlobalXtreme\PHPStorage\Support;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Utils;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class GXStorageClient
 {
@@ -45,13 +47,32 @@ class GXStorageClient
     public function store($path, $file, $title = "")
     {
         try {
+            $isUploadedFile = $file instanceof UploadedFile;
+            $options = $this->prepareHeader($isUploadedFile);
 
-            $options = $this->prepareHeader();
-            $options['json'] = [
-                'path' => $path,
-                'file' => $file,
-                'title' => $title,
-            ];
+            if ($isUploadedFile) {
+                $options['multipart'] = [
+                    [
+                        'name' => 'path',
+                        'contents' => $path
+                    ],
+                    [
+                        'name' => 'title',
+                        'contents' => $title
+                    ],
+                    [
+                        'name' => 'file',
+                        'contents' => Utils::tryFopen($file->getPathname(), 'r'),
+                        'filename' => $file->getClientOriginalName()
+                    ],
+                ];
+            } else {
+                $options['json'] = [
+                    'path' => $path,
+                    'file' => $file,
+                    'title' => $title,
+                ];
+            }
 
             $response = $this->client->post("$this->baseURL/galleries", $options);
 
@@ -96,14 +117,18 @@ class GXStorageClient
 
     /** --- SUB FUNCTIONS --- */
 
-    public function prepareHeader()
+    public function prepareHeader($isUploadedFile)
     {
+        $contentType = [];
+        if (!$isUploadedFile) {
+            $contentType = ['Content-Type' => 'application/json'];
+        }
+
         return [
             RequestOptions::HEADERS => [
-                'Content-Type' => 'application/json',
-                'CLIENT-ID' => $this->clientId,
-                'CLIENT-SECRET' => $this->clientSecret,
-            ]
+                    'CLIENT-ID' => $this->clientId,
+                    'CLIENT-SECRET' => $this->clientSecret,
+                ] + $contentType
         ];
     }
 
