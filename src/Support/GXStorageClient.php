@@ -69,7 +69,7 @@ class GXStorageClient
             } else {
                 $options['json'] = [
                     'path' => $path,
-                    'file' => $file,
+                    'file' => base64_encode($file),
                     'title' => $title,
                 ];
             }
