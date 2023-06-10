@@ -17,6 +17,11 @@ class GXStorageResponse
     /**
      * @var string|null
      */
+    public $internalMsg = "";
+
+    /**
+     * @var string|null
+     */
     public $path = null;
 
     /**
@@ -51,6 +56,7 @@ class GXStorageResponse
         if ($status) {
             $this->status = $status['code'] ?: 500;
             $this->message = $status['message'] ?: "An error occurred.";
+            $this->internalMsg = $status['internalMsg'] ?: "";
         }
 
         $result = json_encode($response['result']) ? ($response['result'] ?: null) : null;
