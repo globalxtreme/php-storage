@@ -117,7 +117,7 @@ class GXStorageClient
 
     /** --- SUB FUNCTIONS --- */
 
-    public function prepareHeader($isUploadedFile)
+    public function prepareHeader($isUploadedFile = null)
     {
         $contentType = [];
         if (!$isUploadedFile) {
