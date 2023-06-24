@@ -3,6 +3,7 @@
 namespace GlobalXtreme\PHPStorage\Support;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Psr7\Utils;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Facades\Log;
@@ -84,9 +85,8 @@ class GXStorageClient
 
             return $body;
 
-        } catch (\Exception $exception) {
-            Log::error($exception);
-            return null;
+        } catch (BadResponseException $e) {
+            return json_decode($e->getResponse()->getBody());
         }
     }
 
@@ -109,8 +109,8 @@ class GXStorageClient
 
             return $body;
 
-        } catch (\Exception $exception) {
-            return null;
+        } catch (BadResponseException $e) {
+            return json_decode($e->getResponse()->getBody());
         }
     }
 

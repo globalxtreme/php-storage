@@ -2,17 +2,19 @@
 
 namespace GlobalXtreme\PHPStorage\Support;
 
+use Illuminate\Support\Facades\Log;
+
 class GXStorageResponse
 {
     /**
      * @var int|null
      */
-    public $status = 200;
+    public $status = 500;
 
     /**
      * @var string|null
      */
-    public $message = "";
+    public $message = "An error occurred.";
 
     /**
      * @var string|null
@@ -52,20 +54,21 @@ class GXStorageResponse
      */
     public function setResponse($response)
     {
-        $status = json_encode($response['status']) ? ($response['status'] ?: null) : null;
-        if ($status) {
-            $this->status = $status['code'] ?: 500;
-            $this->message = $status['message'] ?: "An error occurred.";
-            $this->internalMsg = $status['internalMsg'] ?: "";
-        }
+        if ($response) {
+            if ($response->status) {
+                $this->status = $response->status->code ?: 500;
+                $this->message = $response->status->message ?: "An error occurred.";
+                $this->internalMsg = $response->status->internalMsg ?: "";
+            }
 
-        $result = json_encode($response['result']) ? ($response['result'] ?: null) : null;
-        if ($result && $this->status == 200) {
-            $this->path = $result['path'] ?: null;
-            $this->fullPath = $result['fullPath'] ?: null;
-            $this->mimeType = $result['mimeType'] ?: null;
-            $this->title = $result['title'] ?: null;
-            $this->createdAt = $result['createdAt'] ?: null;
+            $result = property_exists($response, 'result') ? $response->result : null;
+            if ($result && $this->status == 200) {
+                $this->path = $result->path ?: null;
+                $this->fullPath = $result->fullPath ?: null;
+                $this->mimeType = $result->mimeType ?: null;
+                $this->title = $result->title ?: null;
+                $this->createdAt = $result->createdAt ?: null;
+            }
         }
 
         return $this;
