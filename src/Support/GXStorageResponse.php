@@ -55,19 +55,19 @@ class GXStorageResponse
     public function setResponse($response)
     {
         if ($response) {
-            if ($response->status) {
-                $this->status = $response->status->code ?: 500;
-                $this->message = $response->status->message ?: "An error occurred.";
-                $this->internalMsg = $response->status->internalMsg ?: "";
+            if ($response['status']) {
+                $this->status = $response['status']['code'] ?: 500;
+                $this->message = $response['status']['message'] ?: "An error occurred.";
+                $this->internalMsg = $response['status']['internalMsg'] ?: "";
             }
 
-            $result = property_exists($response, 'result') ? $response->result : null;
+            $result = array_key_exists('result', $response) ? $response['result'] : null;
             if ($result && $this->status == 200) {
-                $this->path = $result->path ?: null;
-                $this->fullPath = $result->fullPath ?: null;
-                $this->mimeType = $result->mimeType ?: null;
-                $this->title = $result->title ?: null;
-                $this->createdAt = $result->createdAt ?: null;
+                $this->path = $result['path'] ?: null;
+                $this->fullPath = $result['fullPath'] ?: null;
+                $this->mimeType = $result['mimeType'] ?: null;
+                $this->title = $result['title'] ?: null;
+                $this->createdAt = $result['createdAt'] ?: null;
             }
         }
 
