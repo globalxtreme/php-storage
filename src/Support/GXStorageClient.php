@@ -86,7 +86,7 @@ class GXStorageClient
             return $body;
 
         } catch (BadResponseException $e) {
-            return json_decode($e->getResponse()->getBody());
+            return json_decode($e->getResponse()->getBody(), true);
         }
     }
 
@@ -110,7 +110,7 @@ class GXStorageClient
             return $body;
 
         } catch (BadResponseException $e) {
-            return json_decode($e->getResponse()->getBody());
+            return json_decode($e->getResponse()->getBody(), true);
         }
     }
 
