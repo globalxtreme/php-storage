@@ -2,8 +2,6 @@
 
 namespace GlobalXtreme\PHPStorage\Support;
 
-use Illuminate\Support\Facades\Log;
-
 class GXStorageResponse
 {
     /**

@@ -9,6 +9,7 @@ use GlobalXtreme\PHPStorage\Support\GXStorageResponse;
 /**
  * @method static GXStorageResponse|null    store($path, $file, $title = "")
  * @method static GXStorageResponse|null    delete($path)
+ * @method static string                    notFoundLink()
  *
  * @method static GXStorage   __set_state(array $array)
  *

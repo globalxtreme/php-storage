@@ -19,7 +19,7 @@ class GXStorageClient
     /**
      * @var string
      */
-    protected $baseURL = "http://storage.globalxtreme-gateway.net/api";
+    protected $baseURL = "http://storage.globalxtreme-gateway.net";
 
     /**
      * @var string
@@ -40,6 +40,8 @@ class GXStorageClient
         $this->client = new Client();
 
         $this->baseURL = isset($_ENV['STORAGE_BASE_URL']) ? $_ENV['STORAGE_BASE_URL'] : $this->baseURL;
+        $this->baseURL .= '/api';
+
         $this->clientId = isset($_ENV['STORAGE_CLIENT_ID']) ? $_ENV['STORAGE_CLIENT_ID'] : '';
         $this->clientSecret = isset($_ENV['STORAGE_CLIENT_SECRET']) ? $_ENV['STORAGE_CLIENT_SECRET'] : '';
     }

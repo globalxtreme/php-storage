@@ -22,4 +22,9 @@ interface GXStorage
      * @return GXStorageResponse|null
      */
     public static function delete($path);
+
+    /**
+     * @return string
+     */
+    public static function notFoundLink();
 }

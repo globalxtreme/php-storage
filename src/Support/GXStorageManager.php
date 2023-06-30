@@ -40,4 +40,13 @@ trait GXStorageManager
 
         return $response;
     }
+
+    /**
+     * @return string
+     */
+    public static function notFoundLink()
+    {
+        $link = isset($_ENV['STORAGE_BASE_URL']) ? $_ENV['STORAGE_BASE_URL'] : 'http://storage.globalxtreme-gateway.net';
+        return $link . '/link/default/not-found.jpg';
+    }
 }
