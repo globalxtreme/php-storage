@@ -19,7 +19,7 @@ class GXStorageClient
     /**
      * @var string
      */
-    protected $baseURL = "http://storage.globalxtreme-gateway.net";
+    protected $baseURL = "https://storage.globalxtreme-gateway.net";
 
     /**
      * @var string
