@@ -2,19 +2,19 @@
 
 namespace GlobalXtreme\PHPStorage\Support;
 
+use GlobalXtreme\PHPStorage\Form\GXStorageForm;
+
 trait GXStorageManager
 {
     /**
-     * @param $path
-     * @param $file
-     * @param $title
+     * @param GXStorageForm $form
      *
      * @return GXStorageResponse|null
      */
-    public static function store($path, $file, $title = "")
+    public static function store(GXStorageForm $form)
     {
         $client = new GXStorageClient();
-        $store = $client->store($path, $file, $title);
+        $store = $client->store($form);
         if (!$store) {
             return null;
         }

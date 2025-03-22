@@ -2,6 +2,7 @@
 
 namespace GlobalXtreme\PHPStorage\Support;
 
+use GlobalXtreme\PHPStorage\Form\GXStorageForm;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Psr7\Utils;
@@ -40,44 +41,60 @@ class GXStorageClient
         $this->client = new Client();
 
         $this->baseURL = isset($_ENV['STORAGE_BASE_URL']) ? $_ENV['STORAGE_BASE_URL'] : $this->baseURL;
-        $this->baseURL .= '/api';
+        $this->baseURL .= '/api/public/v2/storages';
 
         $this->clientId = isset($_ENV['STORAGE_CLIENT_ID']) ? $_ENV['STORAGE_CLIENT_ID'] : '';
         $this->clientSecret = isset($_ENV['STORAGE_CLIENT_SECRET']) ? $_ENV['STORAGE_CLIENT_SECRET'] : '';
     }
 
 
-    public function store($path, $file, $title = "")
+    public function store(GXStorageForm $form)
     {
         try {
-            $isUploadedFile = $file instanceof UploadedFile;
-            $options = $this->prepareHeader($isUploadedFile);
+            $file = $form->getFile();
 
-            if ($isUploadedFile) {
-                $options['multipart'] = [
-                    [
-                        'name' => 'path',
-                        'contents' => $path
-                    ],
-                    [
-                        'name' => 'title',
-                        'contents' => $title
-                    ],
-                    [
-                        'name' => 'file',
-                        'contents' => Utils::tryFopen($file->getPathname(), 'r'),
-                        'filename' => $file->getClientOriginalName()
-                    ],
-                ];
-            } else {
-                $options['json'] = [
-                    'path' => $path,
-                    'file' => base64_encode($file),
-                    'title' => $title,
-                ];
-            }
+            $options = $this->prepareHeader();
+            $options['multipart'] = [
+                [
+                    'name' => 'file',
+                    'contents' => Utils::tryFopen($file->getPathname(), 'r'),
+                    'filename' => $file->getClientOriginalName()
+                ],
+                [
+                    'name' => 'path',
+                    'contents' => $form->getPath()
+                ],
+                [
+                    'name' => 'mimeType',
+                    'contents' => $form->getMimeType()
+                ],
+                [
+                    'name' => 'savedUntil',
+                    'contents' => $form->getSavedUntil()
+                ],
+                [
+                    'name' => 'title',
+                    'contents' => $form->getTitle()
+                ],
+                [
+                    'name' => 'ownerId',
+                    'contents' => $form->getOwnerId()
+                ],
+                [
+                    'name' => 'ownerType',
+                    'contents' => $form->getOwnerType()
+                ],
+                [
+                    'name' => 'createdBy',
+                    'contents' => $form->getCreatedBy()
+                ],
+                [
+                    'name' => 'createdByName',
+                    'contents' => $form->getCreatedByName()
+                ],
+            ];
 
-            $response = $this->client->post("$this->baseURL/galleries", $options);
+            $response = $this->client->post("$this->baseURL/files", $options);
 
             // Set response body
             $body = json_decode($response->getBody(), true);
@@ -101,7 +118,7 @@ class GXStorageClient
                 'path' => $path,
             ];
 
-            $response = $this->client->delete("$this->baseURL/galleries", $options);
+            $response = $this->client->delete("$this->baseURL/files", $options);
 
             // Set response body
             $body = json_decode($response->getBody(), true);
@@ -119,18 +136,13 @@ class GXStorageClient
 
     /** --- SUB FUNCTIONS --- */
 
-    public function prepareHeader($isUploadedFile = null)
+    public function prepareHeader()
     {
-        $contentType = [];
-        if (!$isUploadedFile) {
-            $contentType = ['Content-Type' => 'application/json'];
-        }
-
         return [
             RequestOptions::HEADERS => [
-                    'CLIENT-ID' => $this->clientId,
-                    'CLIENT-SECRET' => $this->clientSecret,
-                ] + $contentType
+                'CLIENT-ID' => $this->clientId,
+                'CLIENT-SECRET' => $this->clientSecret,
+            ]
         ];
     }
 

@@ -44,6 +44,11 @@ class GXStorageResponse
      */
     public $createdAt = null;
 
+    /**
+     * @var string|null
+     */
+    public $savedUntil = null;
+
 
     /**
      * @param $response
@@ -66,6 +71,7 @@ class GXStorageResponse
                 $this->mimeType = $result['mimeType'] ?: null;
                 $this->title = $result['title'] ?: null;
                 $this->createdAt = $result['createdAt'] ?: null;
+                $this->savedUntil = $result['savedUntil'] ?: null;
             }
         }
 
