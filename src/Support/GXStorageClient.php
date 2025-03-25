@@ -3,6 +3,7 @@
 namespace GlobalXtreme\PHPStorage\Support;
 
 use GlobalXtreme\PHPStorage\Form\GXStorageForm;
+use GlobalXtreme\PHPStorage\Form\GXStorageMoveCopyForm;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Psr7\Utils;
@@ -52,13 +53,22 @@ class GXStorageClient
     {
         try {
             $file = $form->getFile();
+            if ($file instanceof UploadedFile) {
+                $filePath = $file->getPathname();
+                $filename = $file->getClientOriginalName();
+            } else {
+                $filePath = $file;
+
+                $filenames = explode("/", $file);
+                $filename = last($filenames);
+            }
 
             $options = $this->prepareHeader();
             $options['multipart'] = [
                 [
                     'name' => 'file',
-                    'contents' => Utils::tryFopen($file->getPathname(), 'r'),
-                    'filename' => $file->getClientOriginalName()
+                    'contents' => Utils::tryFopen($filePath, 'r'),
+                    'filename'  => $filename,
                 ],
                 [
                     'name' => 'path',
@@ -91,7 +101,7 @@ class GXStorageClient
                 [
                     'name' => 'createdByName',
                     'contents' => $form->getCreatedByName()
-                ],
+                ]
             ];
 
             $response = $this->client->post("$this->baseURL/files", $options);
@@ -109,10 +119,59 @@ class GXStorageClient
         }
     }
 
+    public function moveToAnotherService(GXStorageMoveCopyForm $form)
+    {
+        try {
+            $options = $this->prepareHeader();
+            $options['json'] = [
+                'file' => $form->getFile(),
+                'toClientId' => $form->getToClientId(),
+                'toPath' => $form->getToPath(),
+            ];
+
+            $response = $this->client->post("$this->baseURL/files/move-to-another-service", $options);
+
+            // Set response body
+            $body = json_decode($response->getBody(), true);
+            if (!$body) {
+                return null;
+            }
+
+            return $body;
+
+        } catch (BadResponseException $e) {
+            return json_decode($e->getResponse()->getBody(), true);
+        }
+    }
+
+    public function copyToAnotherService(GXStorageMoveCopyForm $form)
+    {
+        try {
+            $options = $this->prepareHeader();
+            $options['json'] = [
+                'file' => $form->getFile(),
+                'toClientId' => $form->getToClientId(),
+                'toPath' => $form->getToPath(),
+            ];
+
+            $response = $this->client->post("$this->baseURL/files/copy-to-another-service", $options);
+
+            // Set response body
+            $body = json_decode($response->getBody(), true);
+            if (!$body) {
+                return null;
+            }
+
+            return $body;
+
+        } catch (BadResponseException $e) {
+            return json_decode($e->getResponse()->getBody(), true);
+        }
+    }
+
     public function delete($path)
     {
         try {
-
             $options = $this->prepareHeader();
             $options['json'] = [
                 'path' => $path,

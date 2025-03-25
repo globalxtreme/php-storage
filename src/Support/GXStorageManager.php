@@ -3,6 +3,7 @@
 namespace GlobalXtreme\PHPStorage\Support;
 
 use GlobalXtreme\PHPStorage\Form\GXStorageForm;
+use GlobalXtreme\PHPStorage\Form\GXStorageMoveCopyForm;
 
 trait GXStorageManager
 {
@@ -21,6 +22,44 @@ trait GXStorageManager
 
         $response = new GXStorageResponse();
         $response->setResponse($store);
+
+        return $response;
+    }
+
+    /**
+     * @param GXStorageMoveCopyForm $form
+     *
+     * @return GXStorageResponse|null
+     */
+    public static function moveToAnotherService(GXStorageMoveCopyForm $form)
+    {
+        $client = new GXStorageClient();
+        $move = $client->moveToAnotherService($form);
+        if (!$move) {
+            return null;
+        }
+
+        $response = new GXStorageResponse();
+        $response->setResponse($move);
+
+        return $response;
+    }
+
+    /**
+     * @param GXStorageMoveCopyForm $form
+     *
+     * @return GXStorageResponse|null
+     */
+    public static function copyToAnotherService(GXStorageMoveCopyForm $form)
+    {
+        $client = new GXStorageClient();
+        $copy = $client->copyToAnotherService($form);
+        if (!$copy) {
+            return null;
+        }
+
+        $response = new GXStorageResponse();
+        $response->setResponse($copy);
 
         return $response;
     }
