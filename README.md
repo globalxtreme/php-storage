@@ -32,11 +32,45 @@ composer require globalxtreme/php-storage
           public function testing(Request $request) 
           {
               // Store from parameter request
-              $store = GXStorage::store("path/to", $request->file('file'), "Title");
-            
+              $store = GXStorage::store(new GXStorageForm(
+                  file: $request->file('file'), // Required: Ambil langsung dari parameter request
+                  path: "images/attachments/", // Required: Isi dengan path dimana kamu mau simpan file ini. pastikan path sudah terdaftar dan locked
+                  mimeType: "image/jpeg", // Optional: Jika bisa langsung kirim juga untuk meringankan beban public storage
+                  savedUntil: 10, // Optional: Isi jika ingin menghapus setelah disimpan selama beberapa hari
+                  title: "", // Optional: Isi jika perlu title
+                  ownerId: "", // Optional: Isi jika ingin menentukan pemilik file dan agar saat folder di lock dengan password, pemilik file tidak perlu memasukan password
+                  ownerType: "", // Optional: (employee, customer). Hanaya untuk identifikasi id yang dikirim adalah employee atau customer
+                  createdBy: "", // Optional: Isi jika kamu perlu menyimpan siapa yang upload file tersebut
+                  createdByName: "", // Optional: Isi jika kamu perlu menyimpan siapa yang upload file tersebut
+              ));
+
               // Store from file path
-              $store = GXStorage::store("path/to", file_get_contents(storage_path('path/to/filename')), "Title");
-            
+              $store = GXStorage::store(new GXStorageForm(
+                  file: storage_path('path/to/filename'), // Required: Ambil langsung dari parameter request
+                  path: "images/attachments/", // Required: Isi dengan path dimana kamu mau simpan file ini. pastikan path sudah terdaftar dan locked
+                  mimeType: "image/jpeg", // Optional: Jika bisa langsung kirim juga untuk meringankan beban public storage
+                  savedUntil: 10, // Optional: Isi jika ingin menghapus setelah disimpan selama beberapa hari
+                  title: "", // Optional: Isi jika perlu title
+                  ownerId: "", // Optional: Isi jika ingin menentukan pemilik file dan agar saat folder di lock dengan password, pemilik file tidak perlu memasukan password
+                  ownerType: "", // Optional: (employee, customer). Hanaya untuk identifikasi id yang dikirim adalah employee atau customer
+                  createdBy: "", // Optional: Isi jika kamu perlu menyimpan siapa yang upload file tersebut
+                  createdByName: "", // Optional: Isi jika kamu perlu menyimpan siapa yang upload file tersebut
+              ));
+              
+              // Copy file to another service
+              $copy = GXStorage::copyToAnotherService(new GXStorageMoveCopyForm(
+                  file: "https://dev.storage.globalxtreme-gateway.net/link/path/filename", // Required: full path (link) yang ingin di copy
+                  toClientId: 111111111111, // Required: Client id tempat tujuan file di copy
+                  toPath: "photos/attachments/" // Required: Path tempat file ingin di copy
+              ));
+  
+              // Move file to another service
+              $copy = GXStorage::moveToAnotherService(new GXStorageMoveCopyForm(
+                  file: "https://dev.storage.globalxtreme-gateway.net/link/path/filename", // Required: full path (link) yang ingin di copy
+                  toClientId: 111111111111, // Required: Client id tempat tujuan file di copy
+                  toPath: "photos/attachments/" // Required: Path tempat file ingin di copy
+              ));
+  
               // 200
               $store->status;
   
@@ -51,6 +85,9 @@ composer require globalxtreme/php-storage
   
               // Title
               $store->title;
+  
+              // Saved Until
+              $store->savedUntil;
   
               // Delete file
               $delete = GXStorage::delete("inventories/pdf/4z0Zw5FUCrWfC9oQiian1686389620255618000.xlsx");
@@ -70,7 +107,19 @@ composer require globalxtreme/php-storage
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
     $dotenv->safeLoad();
 
-    $store = GXStorage::store("path/to", file_get_contents($_FILES['file']['tmp_name']), "Title");
+    // Store from file path
+    $store = GXStorage::store(new GXStorageForm(
+        file: $_FILES['file']['tmp_name'], // Required: Ambil langsung dari parameter request
+        path: "images/attachments/", // Required: Isi dengan path dimana kamu mau simpan file ini. pastikan path sudah terdaftar dan locked
+        originalName: $_FILES['file']['original_name'], // Optional: Isi jika perlu menyimpan original name juga
+        mimeType: "image/jpeg", // Optional: Jika bisa langsung kirim juga untuk meringankan beban public storage
+        savedUntil: 10, // Optional: Isi jika ingin menghapus setelah disimpan selama beberapa hari
+        title: "", // Optional: Isi jika perlu title
+        ownerId: "", // Optional: Isi jika ingin menentukan pemilik file dan agar saat folder di lock dengan password, pemilik file tidak perlu memasukan password
+        ownerType: "", // Optional: (employee, customer). Hanaya untuk identifikasi id yang dikirim adalah employee atau customer
+        createdBy: "", // Optional: Isi jika kamu perlu menyimpan siapa yang upload file tersebut
+        createdByName: "", // Optional: Isi jika kamu perlu menyimpan siapa yang upload file tersebut
+    ));
   
     // 200
     $store->status;
@@ -86,6 +135,9 @@ composer require globalxtreme/php-storage
   
     // Title
     $store->title;
+  
+    // Saved Until
+    $store->savedUntil;
   
     // Delete file
     $delete = GXStorage::delete("inventories/pdf/4z0Zw5FUCrWfC9oQiian1686389620255618000.xlsx");

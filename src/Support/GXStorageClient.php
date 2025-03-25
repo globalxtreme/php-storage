@@ -52,15 +52,19 @@ class GXStorageClient
     public function store(GXStorageForm $form)
     {
         try {
+            $originalName = $form->getOriginalName();
+
             $file = $form->getFile();
             if ($file instanceof UploadedFile) {
                 $filePath = $file->getPathname();
-                $filename = $file->getClientOriginalName();
+                $filename = $originalName ?: $file->getClientOriginalName();
             } else {
                 $filePath = $file;
 
-                $filenames = explode("/", $file);
-                $filename = last($filenames);
+                if (!$filename = $originalName) {
+                    $filenames = explode("/", $file);
+                    $filename = last($filenames);
+                }
             }
 
             $options = $this->prepareHeader();

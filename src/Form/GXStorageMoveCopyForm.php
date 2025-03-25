@@ -6,7 +6,7 @@ class GXStorageMoveCopyForm
 {
     public function __construct(
         protected string $file,
-        protected string $toClientId,
+        protected int    $toClientId,
         protected string $toPath,
     )
     {
@@ -22,12 +22,12 @@ class GXStorageMoveCopyForm
         return $this->file;
     }
 
-    public function setToClientId(string $toClientId): void
+    public function setToClientId(int $toClientId): void
     {
         $this->toClientId = $toClientId;
     }
 
-    public function getToClientId(): string
+    public function getToClientId(): int
     {
         return $this->toClientId;
     }

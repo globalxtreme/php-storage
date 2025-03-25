@@ -9,6 +9,7 @@ class GXStorageForm
     public function __construct(
         protected UploadedFile|string $file,
         protected string              $path,
+        protected string|null         $originalName = null,
         protected string|null         $mimeType = null,
         protected int|null            $savedUntil = null,
         protected string|null         $title = null,
@@ -38,6 +39,16 @@ class GXStorageForm
     public function getPath(): string
     {
         return $this->path;
+    }
+
+    public function setOriginalName(?string $originalName): void
+    {
+        $this->originalName = $originalName;
+    }
+
+    public function getOriginalName(): ?string
+    {
+        return $this->originalName;
     }
 
     public function setMimeType(string $mimeType): void
