@@ -99,6 +99,10 @@ class GXStorageClient
                     'contents' => $form->getOwnerType()
                 ],
                 [
+                    'name' => 'withWatermark',
+                    'contents' => $form->getWithWatermark()
+                ],
+                [
                     'name' => 'createdBy',
                     'contents' => $form->getCreatedBy()
                 ],

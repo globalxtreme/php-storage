@@ -15,6 +15,7 @@ class GXStorageForm
         protected string|null         $title = null,
         protected string|int|null     $ownerId = null,
         protected string|null         $ownerType = null,
+        protected bool                $withWatermark = false,
         protected string|null         $createdBy = null,
         protected string|null         $createdByName = null,
     )
@@ -99,6 +100,16 @@ class GXStorageForm
     public function getOwnerType(): string|null
     {
         return $this->ownerType;
+    }
+
+    public function setWithWatermark(bool $withWatermark): void
+    {
+        $this->withWatermark = $withWatermark;
+    }
+
+    public function getWithWatermark(): bool
+    {
+        return $this->withWatermark;
     }
 
     public function setCreatedBy(string|int $createdBy): void
