@@ -2,19 +2,32 @@
 
 namespace GlobalXtreme\PHPStorage\Contract;
 
+use GlobalXtreme\PHPStorage\Form\GXStorageForm;
+use GlobalXtreme\PHPStorage\Form\GXStorageMoveCopyForm;
 use GlobalXtreme\PHPStorage\Support\GXStorageResponse;
-use http\Encoding\Stream;
 
 interface GXStorage
 {
     /**
-     * @param $path
-     * @param $file
-     * @param $title
+     * @param GXStorageForm $form
      *
      * @return GXStorageResponse|null
      */
-    public static function store($path, $file, $title = "");
+    public static function store(GXStorageForm $form);
+
+    /**
+     * @param GXStorageMoveCopyForm $form
+     *
+     * @return GXStorageResponse|null
+     */
+    public static function moveToAnotherService(GXStorageMoveCopyForm $form);
+
+    /**
+     * @param GXStorageMoveCopyForm $form
+     *
+     * @return GXStorageResponse|null
+     */
+    public static function copyToAnotherService(GXStorageMoveCopyForm $form);
 
     /**
      * @param $path
