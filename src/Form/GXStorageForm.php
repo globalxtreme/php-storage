@@ -18,6 +18,9 @@ class GXStorageForm
         protected bool                $withWatermark = false,
         protected string|null         $createdBy = null,
         protected string|null         $createdByName = null,
+        protected string|null         $reference = null,
+        protected string|null         $referenceType = null,
+        protected bool                $external = false,
     )
     {
     }
@@ -130,6 +133,36 @@ class GXStorageForm
     public function getCreatedByName(): string|null
     {
         return $this->createdByName;
+    }
+
+    public function setReference(string|int $reference): void
+    {
+        $this->reference = $reference;
+    }
+
+    public function getReference(): string|null
+    {
+        return $this->reference;
+    }
+
+    public function setReferenceType(string|int $referenceType): void
+    {
+        $this->referenceType = $referenceType;
+    }
+
+    public function getReferenceType(): string|null
+    {
+        return $this->referenceType;
+    }
+
+    public function setExternal(bool $external): void
+    {
+        $this->external = $external;
+    }
+
+    public function getExternal(): bool
+    {
+        return $this->external;
     }
 
 }

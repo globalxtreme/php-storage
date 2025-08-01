@@ -109,6 +109,18 @@ class GXStorageClient
                 [
                     'name' => 'createdByName',
                     'contents' => $form->getCreatedByName()
+                ],
+                [
+                    'name' => 'reference',
+                    'contents' => $form->getReference()
+                ],
+                [
+                    'name' => 'referenceType',
+                    'contents' => $form->getReferenceType()
+                ],
+                [
+                    'name' => 'external',
+                    'contents' => $form->getExternal()
                 ]
             ];
 
