@@ -109,6 +109,18 @@ class GXStorageClient
                 [
                     'name' => 'createdByName',
                     'contents' => $form->getCreatedByName()
+                ],
+                [
+                    'name' => 'reference',
+                    'contents' => $form->getReference()
+                ],
+                [
+                    'name' => 'referenceType',
+                    'contents' => $form->getReferenceType()
+                ],
+                [
+                    'name' => 'external',
+                    'contents' => $form->getExternal()
                 ]
             ];
 
@@ -124,6 +136,8 @@ class GXStorageClient
 
         } catch (BadResponseException $e) {
             return json_decode($e->getResponse()->getBody(), true);
+        } catch (\Error $e) {
+            return $this->errorResponse($e);
         }
     }
 
@@ -149,6 +163,8 @@ class GXStorageClient
 
         } catch (BadResponseException $e) {
             return json_decode($e->getResponse()->getBody(), true);
+        } catch (\Error $e) {
+            return $this->errorResponse($e);
         }
     }
 
@@ -174,6 +190,8 @@ class GXStorageClient
 
         } catch (BadResponseException $e) {
             return json_decode($e->getResponse()->getBody(), true);
+        } catch (\Error $e) {
+            return $this->errorResponse($e);
         }
     }
 
@@ -197,19 +215,32 @@ class GXStorageClient
 
         } catch (BadResponseException $e) {
             return json_decode($e->getResponse()->getBody(), true);
+        } catch (\Error $e) {
+            return $this->errorResponse($e);
         }
     }
 
 
     /** --- SUB FUNCTIONS --- */
 
-    public function prepareHeader()
+    private function prepareHeader()
     {
         return [
             RequestOptions::HEADERS => [
                 'CLIENT-ID' => $this->clientId,
                 'CLIENT-SECRET' => $this->clientSecret,
             ]
+        ];
+    }
+
+    private function errorResponse(\Error $error)
+    {
+        return [
+            'status' => [
+                'code' => 500,
+                'message' => $error->getMessage(),
+                'internalMsg' => "",
+            ],
         ];
     }
 

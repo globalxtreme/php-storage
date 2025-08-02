@@ -32,6 +32,11 @@ class GXStorageResponse
     /**
      * @var string|null
      */
+    public $fullPathExternal = null;
+
+    /**
+     * @var string|null
+     */
     public $mimeType = null;
 
     /**
@@ -68,6 +73,7 @@ class GXStorageResponse
             if ($result && $this->status == 200) {
                 $this->path = $result['path'] ?: null;
                 $this->fullPath = $result['fullPath'] ?: null;
+                $this->fullPathExternal = $result['fullPathExternal'] ?: null;
                 $this->mimeType = $result['mimeType'] ?: null;
                 $this->title = $result['title'] ?: null;
                 $this->createdAt = $result['createdAt'] ?: null;
