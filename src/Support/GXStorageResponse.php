@@ -60,9 +60,9 @@ class GXStorageResponse
      *
      * @return GXStorageResponse
      */
-    public function setResponse($response)
+    public function setResponse($response = null)
     {
-        if ($response) {
+        if ($response != null) {
             if ($response['status']) {
                 $this->status = $response['status']['code'] ?: 500;
                 $this->message = $response['status']['message'] ?: "An error occurred.";

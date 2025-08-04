@@ -8,7 +8,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Psr7\Utils;
 use GuzzleHttp\RequestOptions;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class GXStorageClient
@@ -129,14 +128,14 @@ class GXStorageClient
             // Set response body
             $body = json_decode($response->getBody(), true);
             if (!$body) {
-                return null;
+                return $this->errorResponse("Unable to decode json response");
             }
 
             return $body;
 
         } catch (BadResponseException $e) {
             return json_decode($e->getResponse()->getBody(), true);
-        } catch (\Error $e) {
+        } catch (\Throwable $e) {
             return $this->errorResponse($e);
         }
     }
@@ -156,14 +155,14 @@ class GXStorageClient
             // Set response body
             $body = json_decode($response->getBody(), true);
             if (!$body) {
-                return null;
+                return $this->errorResponse("Unable to decode json response");
             }
 
             return $body;
 
         } catch (BadResponseException $e) {
             return json_decode($e->getResponse()->getBody(), true);
-        } catch (\Error $e) {
+        } catch (\Throwable $e) {
             return $this->errorResponse($e);
         }
     }
@@ -183,14 +182,14 @@ class GXStorageClient
             // Set response body
             $body = json_decode($response->getBody(), true);
             if (!$body) {
-                return null;
+                return $this->errorResponse("Unable to decode json response");
             }
 
             return $body;
 
         } catch (BadResponseException $e) {
             return json_decode($e->getResponse()->getBody(), true);
-        } catch (\Error $e) {
+        } catch (\Throwable $e) {
             return $this->errorResponse($e);
         }
     }
@@ -208,14 +207,14 @@ class GXStorageClient
             // Set response body
             $body = json_decode($response->getBody(), true);
             if (!$body) {
-                return null;
+                return $this->errorResponse("Unable to decode json response");
             }
 
             return $body;
 
         } catch (BadResponseException $e) {
             return json_decode($e->getResponse()->getBody(), true);
-        } catch (\Error $e) {
+        } catch (\Throwable $e) {
             return $this->errorResponse($e);
         }
     }
@@ -233,12 +232,17 @@ class GXStorageClient
         ];
     }
 
-    private function errorResponse(\Error $error)
+    private function errorResponse(\Throwable|string $error)
     {
+        $message = $error;
+        if ($message instanceof \Throwable) {
+            $message = $message->getMessage();
+        }
+
         return [
             'status' => [
                 'code' => 500,
-                'message' => $error->getMessage(),
+                'message' => $message,
                 'internalMsg' => "",
             ],
         ];

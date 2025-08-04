@@ -14,14 +14,15 @@ trait GXStorageManager
      */
     public static function store(GXStorageForm $form)
     {
+        $response = new GXStorageResponse();
+
         $client = new GXStorageClient();
         $store = $client->store($form);
         if (!$store) {
-            return null;
+            $response->setResponse();
+        } else {
+            $response->setResponse($store);
         }
-
-        $response = new GXStorageResponse();
-        $response->setResponse($store);
 
         return $response;
     }
@@ -33,14 +34,15 @@ trait GXStorageManager
      */
     public static function moveToAnotherService(GXStorageMoveCopyForm $form)
     {
+        $response = new GXStorageResponse();
+
         $client = new GXStorageClient();
         $move = $client->moveToAnotherService($form);
         if (!$move) {
-            return null;
+            $response->setResponse();
+        } else {
+            $response->setResponse($move);
         }
-
-        $response = new GXStorageResponse();
-        $response->setResponse($move);
 
         return $response;
     }
@@ -52,14 +54,15 @@ trait GXStorageManager
      */
     public static function copyToAnotherService(GXStorageMoveCopyForm $form)
     {
+        $response = new GXStorageResponse();
+
         $client = new GXStorageClient();
         $copy = $client->copyToAnotherService($form);
         if (!$copy) {
-            return null;
+            $response->setResponse();
+        } else {
+            $response->setResponse($copy);
         }
-
-        $response = new GXStorageResponse();
-        $response->setResponse($copy);
 
         return $response;
     }
@@ -72,10 +75,10 @@ trait GXStorageManager
     public static function delete($path)
     {
         $client = new GXStorageClient();
-        $store = $client->delete($path);
+        $delete = $client->delete($path);
 
         $response = new GXStorageResponse();
-        $response->setResponse($store);
+        $response->setResponse($delete);
 
         return $response;
     }
