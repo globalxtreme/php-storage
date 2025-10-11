@@ -3,7 +3,9 @@
 namespace GlobalXtreme\PHPStorage\Support;
 
 use GlobalXtreme\PHPStorage\Form\GXStorageForm;
-use GlobalXtreme\PHPStorage\Form\GXStorageMoveCopyForm;
+use GlobalXtreme\PHPStorage\Form\GXStorageMoveCopyFromAnotherServiceForm;
+use GlobalXtreme\PHPStorage\Form\GXStorageMoveCopyToAnotherServiceForm;
+use GlobalXtreme\PHPStorage\Form\GXStorageZIPForm;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Psr7\Utils;
@@ -140,7 +142,7 @@ class GXStorageClient
         }
     }
 
-    public function moveToAnotherService(GXStorageMoveCopyForm $form)
+    public function moveToAnotherService(GXStorageMoveCopyToAnotherServiceForm $form)
     {
         try {
             $options = $this->prepareHeader();
@@ -167,7 +169,7 @@ class GXStorageClient
         }
     }
 
-    public function copyToAnotherService(GXStorageMoveCopyForm $form)
+    public function copyToAnotherService(GXStorageMoveCopyToAnotherServiceForm $form)
     {
         try {
             $options = $this->prepareHeader();
@@ -178,6 +180,96 @@ class GXStorageClient
             ];
 
             $response = $this->client->post("$this->baseURL/files/copy-to-another-service", $options);
+
+            // Set response body
+            $body = json_decode($response->getBody(), true);
+            if (!$body) {
+                return $this->errorResponse("Unable to decode json response");
+            }
+
+            return $body;
+
+        } catch (BadResponseException $e) {
+            return json_decode($e->getResponse()->getBody(), true);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function moveFromAnotherService(GXStorageMoveCopyFromAnotherServiceForm $form)
+    {
+        try {
+            $options = $this->prepareHeader();
+            $options['json'] = [
+                'file' => $form->getFile(),
+                'fromClientId' => $form->getFromClientId(),
+                'toPath' => $form->getToPath(),
+            ];
+
+            $response = $this->client->post("$this->baseURL/files/move-from-another-service", $options);
+
+            // Set response body
+            $body = json_decode($response->getBody(), true);
+            if (!$body) {
+                return $this->errorResponse("Unable to decode json response");
+            }
+
+            return $body;
+
+        } catch (BadResponseException $e) {
+            return json_decode($e->getResponse()->getBody(), true);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function copyFromAnotherService(GXStorageMoveCopyFromAnotherServiceForm $form)
+    {
+        try {
+            $options = $this->prepareHeader();
+            $options['json'] = [
+                'file' => $form->getFile(),
+                'fromClientId' => $form->getFromClientId(),
+                'toPath' => $form->getToPath(),
+            ];
+
+            $response = $this->client->post("$this->baseURL/files/copy-from-another-service", $options);
+
+            // Set response body
+            $body = json_decode($response->getBody(), true);
+            if (!$body) {
+                return $this->errorResponse("Unable to decode json response");
+            }
+
+            return $body;
+
+        } catch (BadResponseException $e) {
+            return json_decode($e->getResponse()->getBody(), true);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    public function generateZIP(GXStorageZIPForm $form)
+    {
+        try {
+            $options = $this->prepareHeader();
+            $options['json'] = [
+                'path' => $form->getPath(),
+                'filename' => $form->getFilename(),
+                'title' => $form->getTitle(),
+                'ownerId' => $form->getOwnerId(),
+                'ownerType' => $form->getOwnerType(),
+                'reference' => $form->getReference(),
+                'referenceType' => $form->getReferenceType(),
+                'createdBy' => $form->getCreatedBy(),
+                'createdByName' => $form->getCreatedByName(),
+                'savedUntil' => $form->getSavedUntil(),
+                'external' => $form->getExternal(),
+                'files' => $form->getFiles(),
+            ];
+
+            $response = $this->client->post("$this->baseURL/files/zip", $options);
 
             // Set response body
             $body = json_decode($response->getBody(), true);

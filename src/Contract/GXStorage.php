@@ -3,7 +3,9 @@
 namespace GlobalXtreme\PHPStorage\Contract;
 
 use GlobalXtreme\PHPStorage\Form\GXStorageForm;
-use GlobalXtreme\PHPStorage\Form\GXStorageMoveCopyForm;
+use GlobalXtreme\PHPStorage\Form\GXStorageMoveCopyFromAnotherServiceForm;
+use GlobalXtreme\PHPStorage\Form\GXStorageMoveCopyToAnotherServiceForm;
+use GlobalXtreme\PHPStorage\Form\GXStorageZIPForm;
 use GlobalXtreme\PHPStorage\Support\GXStorageResponse;
 
 interface GXStorage
@@ -16,18 +18,39 @@ interface GXStorage
     public static function store(GXStorageForm $form);
 
     /**
-     * @param GXStorageMoveCopyForm $form
+     * @param GXStorageMoveCopyToAnotherServiceForm $form
      *
      * @return GXStorageResponse|null
      */
-    public static function moveToAnotherService(GXStorageMoveCopyForm $form);
+    public static function moveToAnotherService(GXStorageMoveCopyToAnotherServiceForm $form);
 
     /**
-     * @param GXStorageMoveCopyForm $form
+     * @param GXStorageMoveCopyToAnotherServiceForm $form
      *
      * @return GXStorageResponse|null
      */
-    public static function copyToAnotherService(GXStorageMoveCopyForm $form);
+    public static function copyToAnotherService(GXStorageMoveCopyToAnotherServiceForm $form);
+
+    /**
+     * @param GXStorageMoveCopyFromAnotherServiceForm $form
+     *
+     * @return GXStorageResponse|null
+     */
+    public static function moveFromAnotherService(GXStorageMoveCopyFromAnotherServiceForm $form);
+
+    /**
+     * @param GXStorageMoveCopyFromAnotherServiceForm $form
+     *
+     * @return GXStorageResponse|null
+     */
+    public static function copyFromAnotherService(GXStorageMoveCopyFromAnotherServiceForm $form);
+
+    /**
+     * @param GXStorageZIPForm $form
+     *
+     * @return GXStorageResponse|null
+     */
+    public static function generateZIP(GXStorageZIPForm $form);
 
     /**
      * @param $path
