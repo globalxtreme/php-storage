@@ -73,14 +73,14 @@ composer require globalxtreme/php-storage
               // Move file to another service
               $move = GXStorage::moveToAnotherService(new GXStorageMoveCopyToAnotherServiceForm(
                   file: "https://dev.storage.globalxtreme-gateway.net/link/path/filename", // Required: full path (link) yang ingin di copy
-                  fromClientId: 111111111111, // Required: Client id tempat tujuan file di copy
+                  toClientId: 111111111111, // Required: Client id tempat tujuan file di copy
                   toPath: "photos/attachments/" // Required: Path tempat file ingin di copy
               ));
   
               // Copy file from another service
               $copy = GXStorage::copyFromAnotherService(new GXStorageMoveCopyFromAnotherServiceForm(
                   file: "https://dev.storage.globalxtreme-gateway.net/link/path/filename", // Required: full path (link) yang ingin di copy
-                  toClientId: 111111111111, // Required: Client id tempat asal file di copy
+                  fromClientId: 111111111111, // Required: Client id tempat asal file di copy
                   toPath: "photos/attachments/" // Required: Path tempat file ingin di copy
               ));
   
