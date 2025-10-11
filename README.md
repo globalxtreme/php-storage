@@ -18,6 +18,7 @@ composer require globalxtreme/php-storage
 - Setup .env.
     ```php
     STORAGE_BASE_URL=<storage-api-gateway> // OPTIONAL
+    STORAGE_BASE_URL_EXTERNAL=<storage-api-gateway-external> // OPTIONAL
     STORAGE_CLIENT_ID=<your-client-id>
     STORAGE_CLIENT_SECRET=<your-client-secret>
     ```
