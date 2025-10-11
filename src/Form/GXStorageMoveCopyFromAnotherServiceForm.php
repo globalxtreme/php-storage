@@ -2,11 +2,11 @@
 
 namespace GlobalXtreme\PHPStorage\Form;
 
-class GXStorageMoveCopyForm
+class GXStorageMoveCopyFromAnotherServiceForm
 {
     public function __construct(
         protected string $file,
-        protected int    $toClientId,
+        protected int    $fromClientId,
         protected string $toPath,
     )
     {
@@ -22,14 +22,14 @@ class GXStorageMoveCopyForm
         return $this->file;
     }
 
-    public function setToClientId(int $toClientId): void
+    public function setFromClientId(int $fromClientId): void
     {
-        $this->toClientId = $toClientId;
+        $this->fromClientId = $fromClientId;
     }
 
-    public function getToClientId(): int
+    public function getFromClientId(): int
     {
-        return $this->toClientId;
+        return $this->fromClientId;
     }
 
     public function setToPath(string $toPath): void
