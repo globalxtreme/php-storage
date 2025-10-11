@@ -42,6 +42,9 @@ composer require globalxtreme/php-storage
                   ownerType: "", // Optional: (employee, customer). Hanaya untuk identifikasi id yang dikirim adalah employee atau customer
                   createdBy: "", // Optional: Isi jika kamu perlu menyimpan siapa yang upload file tersebut
                   createdByName: "", // Optional: Isi jika kamu perlu menyimpan siapa yang upload file tersebut
+                  reference: "", // Optional: Ini berfungsi agar saat file dihapus di public storage, server / pemilik file bisa tahu tabel mana yang harus dihapus link nya
+                  referenceType: "", // Optional: Ini berfungsi agar saat file dihapus di public storage, server / pemilik file bisa tahu tabel mana yang harus dihapus link nya
+                  external: true, // Optional: Isi jika ingin menyimpan dan mengkases link dengan url / domain public (gunakan jika ingin mengirim link ke customer)
               ));
 
               // Store from file path
@@ -55,21 +58,65 @@ composer require globalxtreme/php-storage
                   ownerType: "", // Optional: (employee, customer). Hanaya untuk identifikasi id yang dikirim adalah employee atau customer
                   createdBy: "", // Optional: Isi jika kamu perlu menyimpan siapa yang upload file tersebut
                   createdByName: "", // Optional: Isi jika kamu perlu menyimpan siapa yang upload file tersebut
+                  reference: "", // Optional: Ini berfungsi agar saat file dihapus di public storage, server / pemilik file bisa tahu tabel mana yang harus dihapus link nya
+                  referenceType: "", // Optional: Ini berfungsi agar saat file dihapus di public storage, server / pemilik file bisa tahu tabel mana yang harus dihapus link nya
+                  external: true, // Optional: Isi jika ingin menyimpan dan mengkases link dengan url / domain public (gunakan jika ingin mengirim link ke customer)
               ));
               
               // Copy file to another service
-              $copy = GXStorage::copyToAnotherService(new GXStorageMoveCopyForm(
+              $copy = GXStorage::copyToAnotherService(new GXStorageMoveCopyToAnotherServiceForm(
                   file: "https://dev.storage.globalxtreme-gateway.net/link/path/filename", // Required: full path (link) yang ingin di copy
                   toClientId: 111111111111, // Required: Client id tempat tujuan file di copy
                   toPath: "photos/attachments/" // Required: Path tempat file ingin di copy
               ));
   
               // Move file to another service
-              $copy = GXStorage::moveToAnotherService(new GXStorageMoveCopyForm(
+              $move = GXStorage::moveToAnotherService(new GXStorageMoveCopyToAnotherServiceForm(
                   file: "https://dev.storage.globalxtreme-gateway.net/link/path/filename", // Required: full path (link) yang ingin di copy
-                  toClientId: 111111111111, // Required: Client id tempat tujuan file di copy
+                  fromClientId: 111111111111, // Required: Client id tempat tujuan file di copy
                   toPath: "photos/attachments/" // Required: Path tempat file ingin di copy
               ));
+  
+              // Copy file from another service
+              $copy = GXStorage::copyFromAnotherService(new GXStorageMoveCopyFromAnotherServiceForm(
+                  file: "https://dev.storage.globalxtreme-gateway.net/link/path/filename", // Required: full path (link) yang ingin di copy
+                  toClientId: 111111111111, // Required: Client id tempat asal file di copy
+                  toPath: "photos/attachments/" // Required: Path tempat file ingin di copy
+              ));
+  
+              // Move file from another service
+              $move = GXStorage::moveFromAnotherService(new GXStorageMoveCopyFromAnotherServiceForm(
+                  file: "https://dev.storage.globalxtreme-gateway.net/link/path/filename", // Required: full path (link) yang ingin di copy
+                  fromClientId: 111111111111, // Required: Client id tempat asal file di copy
+                  toPath: "photos/attachments/" // Required: Path tempat file ingin di copy
+              ));
+              
+              // Form untuk generate file zip menggunakan public storage links
+              $zipForm = new GXStorageZIPForm(
+                  path: 'attachments/zips/', // Required: Isi dengan path tempat file zip ingin disimpan          
+                  filename: 'contoh-file.zip', // Required: Isi dengan nama file zip yang dinginkan, ini berguna saat download file
+                  title: "", // Optional: Isi jika perlu title
+                  ownerId: "", // Optional: Isi jika ingin menentukan pemilik file dan agar saat folder di lock dengan password, pemilik file tidak perlu memasukan password
+                  ownerType: "", // Optional: (employee, customer). Hanaya untuk identifikasi id yang dikirim adalah employee atau customer
+                  reference: "", // Optional: Ini berfungsi agar saat file dihapus di public storage, server / pemilik file bisa tahu tabel mana yang harus dihapus link nya
+                  referenceType: "", // Optional: Ini berfungsi agar saat file dihapus di public storage, server / pemilik file bisa tahu tabel mana yang harus dihapus link nya
+                  createdBy: "", // Optional: Isi jika kamu perlu menyimpan siapa yang upload file tersebut
+                  createdByName: "", // Optional: Isi jika kamu perlu menyimpan siapa yang upload file tersebut
+                  savedUntil: 10, // Optional: Isi jika ingin menghapus setelah disimpan selama beberapa hari
+                  external: true, // Optional: Isi jika ingin menyimpan dan mengkases link dengan url / domain public (gunakan jika ingin mengirim link ke customer)
+              );
+  
+              // Daftarkan file-file yang ingin kamu masukan ke dalam zip. (MINIMAL 1 FILE)
+              $zipForm->setFile(
+                  filename: 'INVOICE-1111111.pdf', // Required: Isi dengan nama file yang ingin kamu simpan nanti di zip
+                  link: 'https://dev.storage.globalxtreme-gateway.net/link/path/filename', // Required: Isi dengan full link yang kamu dapatkan dari public storage (PASTIKAN LINK NYA BENAR)
+              );
+              $zipForm->setFile(
+                  filename: 'INVOICE-22222222.pdf', // Required: Isi dengan nama file yang ingin kamu simpan nanti di zip
+                  link: 'https://dev.storage.globalxtreme-gateway.net/link/path/filename', // Required: Isi dengan full link yang kamu dapatkan dari public storage (PASTIKAN LINK NYA BENAR)
+              );
+              
+              $zip = GXStorage::generateZIP($zipForm)
   
               // 200
               $store->status;
